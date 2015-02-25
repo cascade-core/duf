@@ -13,10 +13,11 @@
 		"plugin": "duf"
 	},
 	"autoload": {
-		"psr-4": { "Duf\\": "class/" }
+		"psr-4": { "Duf\\Cascade\\": "class/" }
 	},
 	"require": {
         "php": ">=5.4.0",
+        "cascade/libduf": "dev-master",
 		"cascade/composer-plugin": ">=1.1",
 		"cascade/core": ">=0.11"
 	},
