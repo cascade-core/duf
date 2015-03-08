@@ -192,7 +192,7 @@
         },
         "markdownarea": {
             "renderers": {
-                "@edit": "\\Duf\\Renderer\\HtmlForm\\TextArea",
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\MarkdownArea",
                 "@view": "\\Duf\\Renderer\\HtmlView\\MarkdownArea",
                 "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
@@ -396,6 +396,11 @@
         },
         "filter_paginator": {
             "renderer": "\\Duf\\Renderer\\HtmlFilter\\Paginator"
+        }
+    },
+    "content_types": {
+        "text/markdown": {
+            "renderer": "\\Duf\\Renderer\\Content\\Markdown"
         }
     }
 }
