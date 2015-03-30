@@ -52,7 +52,13 @@ class ViewBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHan
 		// Setup inputs and outputs using form field groups
 		$this->inputs = array();
 		foreach ($this->form->getFieldGroups() as $group => $group_config) {
-			$this->inputs[$group] = null;
+			if (empty($group_config['explode_inputs'])) {
+				$this->inputs[$group] = null;
+			} else {
+				foreach ($group_config['fields'] as $field => $field_conf) {
+					$this->inputs[$group.'_'.$field] = null;
+				}
+			}
 		}
 		$this->inputs['class'] = null;
 		$this->inputs['slot'] = 'default';
@@ -76,7 +82,21 @@ class ViewBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHan
 	public function main()
 	{
 		$this->form->id = $this->fullId();
-		$this->form->setDefaults($this->inAll());
+
+		$input_values = $this->inAll();
+		foreach ($this->form->getFieldGroups() as $group => $group_config) {
+			if (!empty($group_config['explode_inputs'])) {
+				foreach ($group_config['fields'] as $field => $field_conf) {
+					$k = $group.'_'.$field;
+					if (isset($input_values[$k])) {
+						$input_values[$group][$field] = $input_values[$k];
+						unset($input_values[$k]);
+					}
+				}
+			}
+		}
+
+		$this->form->setDefaults($input_values);
 		$this->form->useDefaults();
 
 		$class = $this->in('class');
