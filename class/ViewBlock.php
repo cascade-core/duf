@@ -94,7 +94,27 @@ class ViewBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHan
 					}
 				}
 			}
+
+			if (!empty($group_config['input_add_dimensions'])) {
+				if (empty($group_config['collection_dimensions'])) {
+					throw new \InvalidArgumentException('The input_add_dimensions does not make sense without collection_dimensions.');
+				}
+				if ($group_config['collection_dimensions'] - count($group_config['input_add_dimensions']) != 1) {
+					throw new \Exception('Not implemented: input_add_dimensions can be used only with one dimensional collections. Sorry.');
+				}
+				if (count($group_config['input_add_dimensions']) != 1) {
+					throw new \Exception('Not implemented: input_add_dimensions can have only one key to prefix. Sorry.');
+				}
+				$new_key = reset($group_config['input_add_dimensions']);
+				$new_data = array();
+				foreach ($input_values[$group] as $orig_key => $item) {
+					//debug_dump($item, $orig_key.' -> '.$item[$new_key].'/'.$orig_key, true);
+					$new_data[$item[$new_key]][$orig_key] = $item;
+				}
+				$input_values[$group] = $new_data;
+			}
 		}
+		//debug_dump($input_values, 'Input values - '.$this->id(), true);
 
 		$this->form->setDefaults($input_values);
 		$this->form->useDefaults();
